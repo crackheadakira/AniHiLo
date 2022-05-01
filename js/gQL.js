@@ -16,6 +16,7 @@ query($page: Int, $perPage: Int){
           extraLarge
         }
         title {
+          native
           english
           romaji
         }
@@ -57,21 +58,26 @@ function GQL(query, vars, url = "https://graphql.anilist.co") {
 
 GQL(query, vars)
   .then((response, headers) => {
+
     let data = response.Page;
 
     let series1 = data.media[s1];
     let series2 = data.media[s2];
 
+    console.log(series1);
+
     let series1Title = document.getElementById('seriesTitle1')
     let series1Img = document.getElementById('seriesImage1')
+    let series1gmValue = document.getElementById('gmValue')
 
     let series2Title = document.getElementById('seriesTitle2')
     let series2Img = document.getElementById('seriesImage2')
 
 
-    series1Title.textContent = series1.title.romaji || series1.title.english;
+    series1Title.textContent = series1.title.romaji || series1.title.english || series1.title.native;
     series1Img.src = series1.coverImage.extraLarge;
+    series1gmValue.textContent = `Popularity: ${series1.popularity}`
 
-    series2Title.textContent = series2.title.romaji || series2.title.english;
+    series2Title.textContent = series2.title.romaji || series2.title.english || series1.title.native;
     series2Img.src = series2.coverImage.extraLarge;
   });
