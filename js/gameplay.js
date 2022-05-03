@@ -2,17 +2,17 @@ import getGQL from "./gQL";
 
 let series = [];
 let gamemode = "Popularity";
-let originalData;
+let originalData = [];
 let score = document.getElementById('score');
 let scoreValue = 0;
 score.textContent = `Score: ${scoreValue}`
 let series1;
 let series2;
-let series1_spot = getRandomArbitrary(0, 50);
-let series2_spot = getRandomArbitrary(0, 50);
+let series1Index;
+let series2Index;
 
 let higherBTN = document.getElementById('higher');
-let odometer = document.querySelector('.odometer');
+let lowerBTN = document.getElementById('lower');
 
 let query = `
 query($page: Int, $perPage: Int){
@@ -45,65 +45,105 @@ query($page: Int, $perPage: Int){
 `;
 
 let vars = {
-    page: getRandomArbitrary(0, 20),
-    perPage: 50,
+  page: getRandomArbitrary(0, 20),
+  perPage: 50,
 }
 
-let alData = (await getGQL(query, vars)).Page;
+let aniListData = (await getGQL(query, vars)).Page.media;
+let series1_spot = getRandomArbitrary(0, aniListData.length);
+let series2_spot = getRandomArbitrary(0, aniListData.length);
 
 fetchSeries()
 setSeries(1)
 setSeries(2)
 
-function fetchSeries() {
-    series1 = alData.media[series1_spot];
-    series2 = alData.media[series2_spot];
-    series = series.concat(series1, series2)
-    originalData = series;
-}
-
 higherBTN.addEventListener('click', (e) => {
-    replaceSeries()
-    odometer.innerHTML = series1.popularity;
-    console.log(series1)
-    if (series1.popularity < series2.popularity || series1.popularity == series2.popularity) {
-        addScore()
-    }
+  if (series1.popularity <= series2.popularity) {
+    addScore()
+  } else {
+    gameOver();
+  }
+  replaceSeries()
 })
 
+lowerBTN.addEventListener('click', (e) => {
+  if (series1.popularity >= series2.popularity) {
+    addScore()
+  } else {
+    gameOver();
+  }
+  replaceSeries()
+})
+
+function updateVars() {
+  return vars.page = getRandomArbitrary(0, 20);
+}
+
+async function updateData() {
+  updateVars()
+  return aniListData = (await getGQL(query, vars)).Page.media;
+}
+
+function updateArray() {
+  series1Index = aniListData.indexOf(series1);
+  series2Index = aniListData.indexOf(series2);
+  aniListData = aniListData.filter((data, idx) => idx !== series1Index)
+  series2Index = aniListData.indexOf(series2);
+  aniListData = aniListData.filter((data, idx) => idx !== series2Index);
+  console.log(`Array Length: ${aniListData.length} \n Page: ${vars.page}`)
+}
+
+function fetchSeries() {
+  series1 = aniListData[series1_spot];
+  series2 = aniListData[series2_spot];
+  updateArray()
+  series = [series1, series2];
+  originalData = series;
+}
+
+function gameOver() {
+  //window.location.replace('../html/gameover.html')
+}
+
 function addScore() {
-    scoreValue++
-    score.textContent = `Score: ${scoreValue}`;
+  scoreValue++
+  score.textContent = `Score: ${scoreValue}`;
 }
 function getRandomArbitrary(min, max) {
-    return Math.floor(Math.random() * (max - min) + min);
+  return Math.floor(Math.random() * (max - min) + min);
 }
 
 function getSeries(series_id) {
-    return series[+series_id - 1]
+  return series[+series_id - 1]
 }
 
 function replaceSeries() {
-    series2_spot = getRandomArbitrary(0, 50);
-    series1 = originalData[1];
-    series2 = alData.media[series2_spot]
-    series = [series1, series2]
-    setSeries(1)
-    setSeries(2)
-    fetchSeries()
+  if (aniListData.length <= 3) {
+    updateData()
+  }
+  while (series2_spot >= aniListData.length) {
+    series2_spot--
+  }
+  series1_spot = series2_spot;
+  series2_spot = getRandomArbitrary(0, aniListData.length);
+  series1 = originalData[1];
+  series2 = aniListData[series2_spot]
+  series.unshift(series1, series2)
+  setSeries(1)
+  setSeries(2)
+  fetchSeries()
 }
 
 function setSeries(series_id) {
 
-    let series = getSeries(series_id)
-    let seriesTitle = document.getElementById(`seriesTitle${series_id}`);
-    let seriesImage = document.getElementById(`seriesImage${series_id}`);
-    if (series_id == 1) {
-        let gmValue = document.getElementById(`gmValue${series_id}`);
-        gmValue.textContent = `${gamemode}: ${series.popularity}`;
-    }
+  let series = getSeries(series_id)
+  let seriesTitle = document.getElementById(`seriesTitle${series_id}`);
+  let seriesImage = document.getElementById(`seriesImage${series_id}`);
+  if (series_id == 1) {
+    let gmValue = document.getElementById(`gmValue${series_id}`);
+    gmValue.textContent = `${gamemode}: ${series.popularity}`;
+  }
 
-    seriesTitle.textContent = series.title.romaji || series.title.english || series.title.native;
-    seriesImage.src = series.coverImage.extraLarge;
-
+  seriesTitle.textContent = series?.title?.romaji || series?.title?.english || series?.title?.native || "Unknown";
+  seriesImage.src = series.coverImage.extraLarge;
 }
