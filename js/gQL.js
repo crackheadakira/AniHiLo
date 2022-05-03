@@ -1,6 +1,6 @@
-const axios = require('axios');
+import axios from 'axios';
 
-module.exports = function (query, vars, url = "https://graphql.anilist.co") {
+function getGQL(query, vars, url = "https://graphql.anilist.co") {
   return new Promise((resolve, reject) => {
     axios.post(url, {
       query,
@@ -11,4 +11,7 @@ module.exports = function (query, vars, url = "https://graphql.anilist.co") {
       reject("GraphQL Request Rejected\n\n" + err?.response?.data?.errors.map(e => `> ${e.message}\n`) || err);
     });
   });
-}
+};
+
+
+export default getGQL;

@@ -1,0 +1,77 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+#main {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#series{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+#score{
+    margin-bottom: 16px;
+}
+
+#series2BTNs{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 72px;
+}
+
+button{
+    width: 128px;
+    height: 48px;
+}
+
+.seriesInfo{
+    height: 390px;
+}
+
+.gameSide {
+    display: flex;
+    flex-direction: column;
+    margin-top: 48px;
+}
+
+.seriesInfo {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+}
+
+.seriesTitle {
+    overflow: hidden;
+    width: 300px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.seriesImage {
+    float: right;
+    object-fit: cover;
+    width: 230px;
+    height: 300px;
+    border-radius: 3%;
+}
+
+.gameSide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
