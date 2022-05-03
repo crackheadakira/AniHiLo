@@ -58,14 +58,19 @@ let series1_spot = getRandomArbitrary(0, aniListData.length);
 let series2_spot = getRandomArbitrary(0, aniListData.length);
 
 fetchSeries()
+gamemodeBox.textContent = series1.popularity
 setSeries(1)
 setSeries(2)
 
 higherBTN.addEventListener('click', (e) => {
   if (series1.popularity <= series2.popularity) {
-    setTimeout(addScore, 1000)
+    animateIn(gamemodeBox, "2.85", "tada")
+    gamemodeBox.classList.add('correctAnswer')
+    setTimeout(addScore, 1500)
   } else {
-    setTimeout(gameOver, 1000)
+    animateIn(gamemodeBox, "2.85", "wobble")
+    gamemodeBox.classList.add('wrongAnswer')
+    setTimeout(gameOver, 2500)
   }
   displayNumber(series2.popularity, gamemodeBox)
   setTimeout(seriesTransistion, 3000, "1.25", "fadeInRight")
@@ -73,11 +78,16 @@ higherBTN.addEventListener('click', (e) => {
 
 lowerBTN.addEventListener('click', (e) => {
   if (series1.popularity >= series2.popularity) {
-    setTimeout(addScore, 1000)
+    animateIn(gamemodeBox, "2.85", "tada")
+    gamemodeBox.classList.add('correctAnswer')
+    setTimeout(addScore, 1500)
   } else {
-    setTimeout(gameOver, 1000)
+    animateIn(gamemodeBox, "2.85", "wobble")
+    gamemodeBox.classList.add('wrongAnswer')
+    setTimeout(gameOver, 2500)
   }
-  seriesTransistion("1.25", "fadeInRight")
+  displayNumber(series2.popularity, gamemodeBox)
+  setTimeout(seriesTransistion, 3000, "1.25", "fadeInRight")
 })
 
 function updateVars() {
@@ -97,7 +107,7 @@ function updateArray() {
   aniListData = aniListData.filter((data, idx) => idx !== series2Index);
 }
 
-function displayNumber(displayNumber, div){
+function displayNumber(displayNumber, div) {
   div.style.display = 'flex';
   higherBTN.style.display = 'none';
   lowerBTN.style.display = 'none';
@@ -105,10 +115,11 @@ function displayNumber(displayNumber, div){
   setTimeout(fixDisplayNumber, 2850, div)
 }
 
-function fixDisplayNumber(div){
+function fixDisplayNumber(div) {
   div.style.display = 'none';
   higherBTN.style.display = 'flex';
   lowerBTN.style.display = 'flex';
+  gamemodeBox.classList.remove('correctAnswer', 'wrongAnswer')
   animateIn(allBTNs, "1.25", "fadeInUp")
 }
 
@@ -121,7 +132,7 @@ function fetchSeries() {
 }
 
 function gameOver() {
-  //window.location.replace('../html/gameover.html')
+  window.location.replace('../html/gameover.html')
 }
 
 function addScore() {
