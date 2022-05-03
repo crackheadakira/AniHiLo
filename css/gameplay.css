@@ -5,12 +5,24 @@ body {
 
 #main {
     display: flex;
+    flex-direction: column;
     height: 100vh;
-    justify-content: space-evenly;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#series{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: flex-start;
 }
 
-.series2BTNs{
+#score{
+    margin-bottom: 16px;
+}
+
+#series2BTNs{
     display: flex;
     flex-direction: column;
     gap: 8px;
