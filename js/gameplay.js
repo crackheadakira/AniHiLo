@@ -81,21 +81,19 @@ function updateVars() {
 
 async function updateData() {
   updateVars()
-  aniListData = (await getGQL(query, vars)).Page.media;
+  return aniListData = (await getGQL(query, vars)).Page.media;
 }
 
 function updateArray() {
   series1Index = aniListData.indexOf(series1);
   series2Index = aniListData.indexOf(series2);
-  console.log(series1Index, series2Index, aniListData);
   aniListData = aniListData.filter((data, idx) => idx !== series1Index)
   series2Index = aniListData.indexOf(series2);
   aniListData = aniListData.filter((data, idx) => idx !== series2Index);
-  console.log(series1Index, series2Index, aniListData);
+  console.log(`Array Length: ${aniListData.length} \n Page: ${vars.page}`)
 }
 
 function fetchSeries() {
-  if (series1_spot == aniListData.length) { series1_spot-- }
   series1 = aniListData[series1_spot];
   series2 = aniListData[series2_spot];
   updateArray()
@@ -120,6 +118,12 @@ function getSeries(series_id) {
 }
 
 function replaceSeries() {
+  if (aniListData.length <= 3) {
+    updateData()
+  }
+  while (series2_spot >= aniListData.length) {
+    series2_spot--
+  }
   series1_spot = series2_spot;
   series2_spot = getRandomArbitrary(0, aniListData.length);
   series1 = originalData[1];
