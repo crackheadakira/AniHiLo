@@ -3,16 +3,20 @@ import getGQL from "./gQL";
 let series = [];
 let gamemode = "Popularity";
 let originalData = [];
-let score = document.getElementById('score');
+let score = document.getElementById('scoreValue');
 let scoreValue = 0;
-score.textContent = `Score: ${scoreValue}`
 let series1;
 let series2;
 let series1Index;
 let series2Index;
+let seriesInfo = document.querySelectorAll('.seriesInfo')
 
+let gamemodeBox = document.getElementById("gamemodeValue");
+let allBTNs = document.getElementById('series2BTNs');
 let higherBTN = document.getElementById('higher');
 let lowerBTN = document.getElementById('lower');
+
+gamemodeBox.style.display = 'none';
 
 let query = `
 query($page: Int, $perPage: Int){
@@ -59,20 +63,21 @@ setSeries(2)
 
 higherBTN.addEventListener('click', (e) => {
   if (series1.popularity <= series2.popularity) {
-    addScore()
+    setTimeout(addScore, 1000)
   } else {
-    gameOver();
+    setTimeout(gameOver, 1000)
   }
-  replaceSeries()
+  displayNumber(series2.popularity, gamemodeBox)
+  setTimeout(seriesTransistion, 3000, "1.25", "fadeInRight")
 })
 
 lowerBTN.addEventListener('click', (e) => {
   if (series1.popularity >= series2.popularity) {
-    addScore()
+    setTimeout(addScore, 1000)
   } else {
-    gameOver();
+    setTimeout(gameOver, 1000)
   }
-  replaceSeries()
+  seriesTransistion("1.25", "fadeInRight")
 })
 
 function updateVars() {
@@ -90,7 +95,21 @@ function updateArray() {
   aniListData = aniListData.filter((data, idx) => idx !== series1Index)
   series2Index = aniListData.indexOf(series2);
   aniListData = aniListData.filter((data, idx) => idx !== series2Index);
-  console.log(`Array Length: ${aniListData.length} \n Page: ${vars.page}`)
+}
+
+function displayNumber(displayNumber, div){
+  div.style.display = 'flex';
+  higherBTN.style.display = 'none';
+  lowerBTN.style.display = 'none';
+  div.textContent = displayNumber;
+  setTimeout(fixDisplayNumber, 2850, div)
+}
+
+function fixDisplayNumber(div){
+  div.style.display = 'none';
+  higherBTN.style.display = 'flex';
+  lowerBTN.style.display = 'flex';
+  animateIn(allBTNs, "1.25", "fadeInUp")
 }
 
 function fetchSeries() {
@@ -107,7 +126,7 @@ function gameOver() {
 
 function addScore() {
   scoreValue++
-  score.textContent = `Score: ${scoreValue}`;
+  score.textContent = scoreValue;
 }
 function getRandomArbitrary(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
@@ -134,9 +153,23 @@ function replaceSeries() {
   fetchSeries()
 }
 
+function seriesTransistion(duration = "1.25", animationType) {
+  animateIn(seriesInfo[1], duration, animationType)
+  animateIn(seriesInfo[0], duration, animationType)
+  replaceSeries()
+}
+
+function animateIn(element, duration = "1.25", animationType = "fadeInRight") {
+  element.style.setProperty('--animate-duration', `${duration}s`);
+  element.classList.add('animate__animated', `animate__${animationType}`);
+  element.addEventListener('animationend', () => {
+    element.classList.remove('animate__animated', `animate__${animationType}`);
+  });
+};
+
 function setSeries(series_id) {
 
-  let series = getSeries(series_id)
+  let series = getSeries(series_id);
   let seriesTitle = document.getElementById(`seriesTitle${series_id}`);
   let seriesImage = document.getElementById(`seriesImage${series_id}`);
   if (series_id == 1) {

@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/gameplay.css">
     <link rel="stylesheet" href='../libraries/odometer.css' />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <script type="text/javascript" src="../libraries/odometer.js"></script>
     <script type="module" src="../js/gameplay.js" defer></script>
     <title>Gameplay</title>
@@ -16,24 +17,27 @@
     <div id="main">
         <div id="series">
             <div id="Series1" class="gameSide">
-                <div class="seriesInfo">
+                <div class="seriesInfo" id="1">
                     <img class="seriesImage" id="seriesImage1">
                     <div class="seriesTitle" id="seriesTitle1"></div>
                     <div id="gmValue1"></div>
                 </div>
             </div>
             <div id="Series2" class="gameSide">
-                <div class="seriesInfo">
+                <div class="seriesInfo" id="2">
                     <img class="seriesImage" id="seriesImage2">
                     <div class="seriesTitle" id="seriesTitle2"></div>
                 </div>
                 <div id="series2BTNs">
                     <button id="higher">Higher ▲</button>
+                    <div id="gamemodeValue" class="odometer"></div>
                     <button id="lower">Lower ▼</button>
                 </div>
             </div>
         </div>
-        <div id="score"></div>
+        <div id="score">Score:
+            <div id="scoreValue" class="odometer"></div>
+        </div>
     </div>
 </body>
 

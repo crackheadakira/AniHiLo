@@ -3,6 +3,7 @@ body {
     margin: 0;
     background-color: #0D1821;
     color: white;
+    font-family: sans-serif;
 }
 
 #main {
@@ -13,52 +14,68 @@ body {
     justify-content: space-between;
 }
 
-#series{
+#series {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
 }
 
-#score{
+#score {
     margin-bottom: 16px;
+    font-weight: 900;
+    font-size: 24px;
 }
 
-#series2BTNs{
+#scoreValue {
+    margin-bottom: 5px;
+}
+
+#series2BTNs {
     display: flex;
     flex-direction: column;
     gap: 8px;
     margin-top: 72px;
 }
 
-#higher{
+#gamemodeValue{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#higher {
     background-color: rgb(34 197 94);
 }
 
-#lower{
+#lower {
     background-color: rgb(239 68 68);
 }
 
-button:hover{
-    filter:opacity(80%);
+button:hover {
+    filter: opacity(80%);
     transform: scale(1.05);
 }
 
-button:active{
+button:active {
     transform: scale(1.01);
 }
 
-button{
+button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: none;
     border-radius: 10px;
-    font-size: 16px;
+    font-size: 20px;
+    font-weight: 1000;
     color: white;
     transition: 250ms;
     width: 128px;
     height: 48px;
 }
 
-.seriesInfo{
+.seriesInfo {
     height: 400px;
 }
 
@@ -84,7 +101,7 @@ button{
     -webkit-box-orient: vertical;
     text-align: center;
     font-size: 22px;
-    font-weight: 500;
+    font-weight: 700;
 }
 
 .seriesImage {
