@@ -1,18 +1,21 @@
+import { CountUp } from "countup.js";
 import getGQL from "./gQL";
+
+let countUpOptions = {
+  separator: ' ',
+};
 
 let series = [];
 let gamemode = "Popularity";
 let originalData = [];
 let score = document.getElementById('scoreValue');
 let scoreValue = 0;
+score.textContent = scoreValue;
 let series1;
 let series2;
 let series1Index;
 let series2Index;
 let seriesInfo = document.querySelectorAll('.seriesInfo')
-window.odometerOptions = {
-  duration: 2550, // Change how long the javascript expects the CSS animation to take
-};
 
 let gamemodeBox = document.getElementById("gamemodeValue");
 let allBTNs = document.getElementById('series2BTNs');
@@ -66,10 +69,12 @@ setSeries(1)
 setSeries(2)
 
 higherBTN.addEventListener('click', (e) => {
+  let animate = animateValue(series2, countUpOptions);
+  animate.start();
   if (series1.popularity <= series2.popularity) {
     animateIn(gamemodeBox, "2.85", "tada")
     gamemodeBox.classList.add('correctAnswer')
-    setTimeout(addScore, 1500)
+    setTimeout(addScore, 1500, countUpOptions)
   } else {
     animateIn(gamemodeBox, "2.85", "headShake")
     gamemodeBox.classList.add('wrongAnswer')
@@ -80,10 +85,12 @@ higherBTN.addEventListener('click', (e) => {
 })
 
 lowerBTN.addEventListener('click', (e) => {
+  let animate = animateValue(series2, countUpOptions);
+  animate.start();
   if (series1.popularity >= series2.popularity) {
     animateIn(gamemodeBox, "2.85", "tada")
     gamemodeBox.classList.add('correctAnswer')
-    setTimeout(addScore, 1500)
+    setTimeout(addScore, 1500, countUpOptions)
   } else {
     animateIn(gamemodeBox, "2.85", "headShake")
     gamemodeBox.classList.add('wrongAnswer')
@@ -136,15 +143,27 @@ function fetchSeries() {
 
 function gameOver(score) {
   localStorage.setItem('sessionScore', score);
-  if(score >= localStorage.getItem('highscore')){
+  if (score >= localStorage.getItem('highscore')) {
     localStorage.setItem('highscore', score)
   }
   window.location.replace('../html/gameover.html')
 }
 
-function addScore() {
+function animateValue(series, options) {
+  let animateValue = new CountUp('gamemodeValue', series.popularity, options);
+  return animateValue;
+}
+
+function animateScore(score, options) {
+  options.startVal = score;
+  let animateScore = new CountUp('scoreValue', score, options);
+  return animateScore;
+}
+
+function addScore(options) {
   scoreValue++
-  score.textContent = scoreValue;
+  let animate = animateScore(scoreValue, options);
+  animate.start();
 }
 function getRandomArbitrary(min, max) {
   return Math.floor(Math.random() * (max - min) + min);

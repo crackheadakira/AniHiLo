@@ -22,6 +22,8 @@ body {
 }
 
 #score {
+    display: flex;
+    gap: 8px;
     margin-bottom: 16px;
     font-weight: 900;
     font-size: 24px;
@@ -41,6 +43,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 48px;
+    font-weight: 700;
 }
 
 #higher {
@@ -65,10 +69,6 @@ body {
     transform: scale(1.25);
 }
 
-.odometer{
-    font-size: 32px;
-    font-weight: 700;
-}
 
 button:hover {
     filter: opacity(80%);
