@@ -10,6 +10,9 @@ let series2;
 let series1Index;
 let series2Index;
 let seriesInfo = document.querySelectorAll('.seriesInfo')
+window.odometerOptions = {
+  duration: 2550, // Change how long the javascript expects the CSS animation to take
+};
 
 let gamemodeBox = document.getElementById("gamemodeValue");
 let allBTNs = document.getElementById('series2BTNs');
@@ -68,9 +71,9 @@ higherBTN.addEventListener('click', (e) => {
     gamemodeBox.classList.add('correctAnswer')
     setTimeout(addScore, 1500)
   } else {
-    animateIn(gamemodeBox, "2.85", "wobble")
+    animateIn(gamemodeBox, "2.85", "headShake")
     gamemodeBox.classList.add('wrongAnswer')
-    setTimeout(gameOver, 2500)
+    setTimeout(gameOver, 2500, scoreValue)
   }
   displayNumber(series2.popularity, gamemodeBox)
   setTimeout(seriesTransistion, 3000, "1.25", "fadeInRight")
@@ -82,9 +85,9 @@ lowerBTN.addEventListener('click', (e) => {
     gamemodeBox.classList.add('correctAnswer')
     setTimeout(addScore, 1500)
   } else {
-    animateIn(gamemodeBox, "2.85", "wobble")
+    animateIn(gamemodeBox, "2.85", "headShake")
     gamemodeBox.classList.add('wrongAnswer')
-    setTimeout(gameOver, 2500)
+    setTimeout(gameOver, 2500, scoreValue)
   }
   displayNumber(series2.popularity, gamemodeBox)
   setTimeout(seriesTransistion, 3000, "1.25", "fadeInRight")
@@ -120,7 +123,7 @@ function fixDisplayNumber(div) {
   higherBTN.style.display = 'flex';
   lowerBTN.style.display = 'flex';
   gamemodeBox.classList.remove('correctAnswer', 'wrongAnswer')
-  animateIn(allBTNs, "1.25", "fadeInUp")
+  animateIn(allBTNs, "1.25", "slideInUp")
 }
 
 function fetchSeries() {
@@ -131,7 +134,11 @@ function fetchSeries() {
   originalData = series;
 }
 
-function gameOver() {
+function gameOver(score) {
+  localStorage.setItem('sessionScore', score);
+  if(score >= localStorage.getItem('highscore')){
+    localStorage.setItem('highscore', score)
+  }
   window.location.replace('../html/gameover.html')
 }
 

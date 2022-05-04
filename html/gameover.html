@@ -6,11 +6,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Over!</title>
+    <script type="module" src="../js/gameover.js" defer></script>
+    <link rel="stylesheet" href="../css/gameover.css">
 </head>
 
 <body>
-    get played bitch, you lost.
-    <div class="score"></div>
+    <div id="main">
+        <div id="mainInfo">
+            <div id="heroText">Well played, but not well enough.</div>
+            <div id="scoreResult"></div>
+        </div>
+        <div id="buttons">
+            <a href="gameplay.html"><button id="tryAgain">Try again</button></a>
+            <a href="../index.html"><button id="startPage">Go back to start</button></a>
+        </div>
+    </div>
 </body>
 
 </html>

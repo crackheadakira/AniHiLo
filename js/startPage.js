@@ -1,3 +1,4 @@
 const highScore = document.querySelector('#highScore')
-let HSvalue = 2;
+let HSvalue = 0;
+HSvalue = localStorage.getItem('highscore')
 highScore.textContent = `Highscore : ${HSvalue}`
