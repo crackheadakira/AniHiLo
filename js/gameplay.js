@@ -12,8 +12,6 @@ const seriesInfo = document.querySelectorAll('.seriesInfo')
 const gamemodeBox = document.getElementById("gamemodeValue");
 const series2BTNs = document.getElementById('series2BTNs');
 const allBTNs = document.querySelectorAll(`button`);
-const higherBTN = document.getElementById('higher');
-const lowerBTN = document.getElementById('lower');
 
 let aniListData = (await getGQL()).Page.media;
 let originalSeriesPick = getRandomArbitrary(0, aniListData.length);
@@ -79,6 +77,9 @@ async function updateData() {
   return aniListData = (await getGQL(query, vars)).Page.media;
 }
 
+// Find's the currently shown series and
+// removes them from the data array.
+
 function removeDataDupes(data, series) {
   let ogSeriesIndex = data.indexOf(series[0]);
   data = data.filter((data, idx) => idx !== ogSeriesIndex)
@@ -87,6 +88,11 @@ function removeDataDupes(data, series) {
   return data;
 }
 
+// It hides the buttons and shows a
+// div with the series 2 popularity
+// counting up using CountUp.js and
+// animations from animate.css
+
 function displayNumber(displayNumber, div, allBTNs) {
   div.style.display = 'flex';
   allBTNs[0].style.display = 'none';
@@ -94,6 +100,9 @@ function displayNumber(displayNumber, div, allBTNs) {
   div.textContent = displayNumber;
   setTimeout(fixDisplayNumber, 2850, div, allBTNs)
 }
+
+// Reenables the buttons and removes
+// the animations from the buttons
 
 function fixDisplayNumber(div, allBTNs) {
   div.style.display = 'none';
