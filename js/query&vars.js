@@ -14,7 +14,7 @@ let query = `query($page: Int, $perPage: Int){
       pageInfo {
         currentPage
       }
-      media(format: TV, sort: POPULARITY_DESC, status_not: NOT_YET_RELEASED) {
+      media(format: TV, sort: TRENDING_DESC, status_not: NOT_YET_RELEASED) {
         popularity
         averageScore
         siteUrl
