@@ -4,101 +4,71 @@ import getGQL from "./gQL";
 let countUpOptions = {
   separator: ' ',
 };
-
-let series = [];
 let gamemode = "Popularity";
-let originalData = [];
-let score = document.getElementById('scoreValue');
 let scoreValue = 0;
+
+const score = document.getElementById('scoreValue');
+const seriesInfo = document.querySelectorAll('.seriesInfo')
+const gamemodeBox = document.getElementById("gamemodeValue");
+const series2BTNs = document.getElementById('series2BTNs');
+const allBTNs = document.querySelectorAll(`button`);
+const higherBTN = document.getElementById('higher');
+const lowerBTN = document.getElementById('lower');
+
+let aniListData = (await getGQL()).Page.media;
+let originalSeriesPick = getRandomArbitrary(0, aniListData.length);
+let newSeriesPick = getRandomArbitrary(0, aniListData.length);
+let series = fetchSeries(originalSeriesPick, newSeriesPick, aniListData);
+let backupSeries = series;
+
+setSeries(1, series);
+setSeries(2, series);
 score.textContent = scoreValue;
-let series1;
-let series2;
-let series1Index;
-let series2Index;
-let seriesInfo = document.querySelectorAll('.seriesInfo')
-
-let gamemodeBox = document.getElementById("gamemodeValue");
-let allBTNs = document.getElementById('series2BTNs');
-let higherBTN = document.getElementById('higher');
-let lowerBTN = document.getElementById('lower');
-
 gamemodeBox.style.display = 'none';
+gamemodeBox.textContent = series[0].popularity;
 
-let query = `
-query($page: Int, $perPage: Int){
-    Page(page: $page, perPage: $perPage) {
-      pageInfo {
-        currentPage
-      }
-      media(format: TV, sort: POPULARITY_DESC, status_not: NOT_YET_RELEASED) {
-        popularity
-        averageScore
-        siteUrl
-        favourites
-        id
-        coverImage {
-          extraLarge
-        }
-        title {
-          native
-          english
-          romaji
-        }
-        startDate {
-          day
-          month
-          year
-        }
-      }
-    }
-  }
-`;
+allBTNs.forEach(button => {
+  button.addEventListener('click', (buttonInfo) => {
+    const animate = animateValue(series[1], countUpOptions);
+    animate.start();
+    switch (buttonInfo.target.id) {
+      case "higher":
+        if (series[0].popularity <= series[1].popularity) {
+          correctAnswer(gamemodeBox);
+        } else {
+          wrongAnswer(gamemodeBox);
+        };
+        break;
 
-let vars = {
-  page: getRandomArbitrary(0, 20),
-  perPage: 50,
+      case "lower":
+        if (series[0].popularity >= series[1].popularity) {
+          correctAnswer(gamemodeBox);
+        } else {
+          wrongAnswer(gamemodeBox);
+        };
+        break;
+
+    };
+    // Replaces the buttons to display the newSeries popularity
+    // and then does a transistion after 3 seconds to the new pick
+    displayNumber(series[1].popularity, gamemodeBox, allBTNs)
+    setTimeout(seriesTransistion, 3000, "1.25", "fadeInRight", aniListData, backupSeries, newSeriesPick)
+  });
+});
+
+// FUNCTIONS BELOW
+
+function correctAnswer(div) {
+  animateIn(div, "2.85", "tada")
+  div.classList.add('correctAnswer')
+  setTimeout(addScore, 1500, countUpOptions)
 }
 
-let aniListData = (await getGQL(query, vars)).Page.media;
-let series1_spot = getRandomArbitrary(0, aniListData.length);
-let series2_spot = getRandomArbitrary(0, aniListData.length);
-
-fetchSeries()
-gamemodeBox.textContent = series1.popularity
-setSeries(1)
-setSeries(2)
-
-higherBTN.addEventListener('click', (e) => {
-  let animate = animateValue(series2, countUpOptions);
-  animate.start();
-  if (series1.popularity <= series2.popularity) {
-    animateIn(gamemodeBox, "2.85", "tada")
-    gamemodeBox.classList.add('correctAnswer')
-    setTimeout(addScore, 1500, countUpOptions)
-  } else {
-    animateIn(gamemodeBox, "2.85", "headShake")
-    gamemodeBox.classList.add('wrongAnswer')
-    setTimeout(gameOver, 2500, scoreValue)
-  }
-  displayNumber(series2.popularity, gamemodeBox)
-  setTimeout(seriesTransistion, 3000, "1.25", "fadeInRight")
-})
-
-lowerBTN.addEventListener('click', (e) => {
-  let animate = animateValue(series2, countUpOptions);
-  animate.start();
-  if (series1.popularity >= series2.popularity) {
-    animateIn(gamemodeBox, "2.85", "tada")
-    gamemodeBox.classList.add('correctAnswer')
-    setTimeout(addScore, 1500, countUpOptions)
-  } else {
-    animateIn(gamemodeBox, "2.85", "headShake")
-    gamemodeBox.classList.add('wrongAnswer')
-    setTimeout(gameOver, 2500, scoreValue)
-  }
-  displayNumber(series2.popularity, gamemodeBox)
-  setTimeout(seriesTransistion, 3000, "1.25", "fadeInRight")
-})
+function wrongAnswer(div) {
+  animateIn(div, "2.85", "headShake")
+  div.classList.add('wrongAnswer')
+  setTimeout(gameOver, 2500, scoreValue)
+}
 
 function updateVars() {
   return vars.page = getRandomArbitrary(0, 20);
@@ -109,36 +79,36 @@ async function updateData() {
   return aniListData = (await getGQL(query, vars)).Page.media;
 }
 
-function updateArray() {
-  series1Index = aniListData.indexOf(series1);
-  series2Index = aniListData.indexOf(series2);
-  aniListData = aniListData.filter((data, idx) => idx !== series1Index)
-  series2Index = aniListData.indexOf(series2);
-  aniListData = aniListData.filter((data, idx) => idx !== series2Index);
+function removeDataDupes(data, series) {
+  let ogSeriesIndex = data.indexOf(series[0]);
+  data = data.filter((data, idx) => idx !== ogSeriesIndex)
+  let newSeriesIndex = data.indexOf(series[1]);
+  data = data.filter((data, idx) => idx !== newSeriesIndex);
+  return data;
 }
 
-function displayNumber(displayNumber, div) {
+function displayNumber(displayNumber, div, allBTNs) {
   div.style.display = 'flex';
-  higherBTN.style.display = 'none';
-  lowerBTN.style.display = 'none';
+  allBTNs[0].style.display = 'none';
+  allBTNs[1].style.display = 'none';
   div.textContent = displayNumber;
-  setTimeout(fixDisplayNumber, 2850, div)
+  setTimeout(fixDisplayNumber, 2850, div, allBTNs)
 }
 
-function fixDisplayNumber(div) {
+function fixDisplayNumber(div, allBTNs) {
   div.style.display = 'none';
-  higherBTN.style.display = 'flex';
-  lowerBTN.style.display = 'flex';
+  allBTNs[0].style.display = 'flex';
+  allBTNs[1].style.display = 'flex';
   gamemodeBox.classList.remove('correctAnswer', 'wrongAnswer')
-  animateIn(allBTNs, "1.25", "slideInUp")
+  animateIn(series2BTNs, "1.25", "slideInUp")
 }
 
-function fetchSeries() {
-  series1 = aniListData[series1_spot];
-  series2 = aniListData[series2_spot];
-  updateArray()
-  series = [series1, series2];
-  originalData = series;
+function fetchSeries(ogSeriesPick, newSeriesPick, data) {
+  let ogSeries = data[ogSeriesPick];
+  let newSeries = data[newSeriesPick];
+  let series = [ogSeries, newSeries];
+  removeDataDupes(data, series)
+  return series;
 }
 
 function gameOver(score) {
@@ -165,36 +135,41 @@ function addScore(options) {
   let animate = animateScore(scoreValue, options);
   animate.start();
 }
+
 function getRandomArbitrary(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
-function getSeries(series_id) {
-  return series[+series_id - 1]
+function getSeries(series_id, series) {
+  let selectedSeries = series[+series_id - 1]
+  return selectedSeries
 }
 
-function replaceSeries() {
-  if (aniListData.length <= 3) {
+function replaceSeries(data, newSeriesPick, series, originalData) {
+  if (data.length <= 3) {
     updateData()
   }
-  while (series2_spot >= aniListData.length) {
-    series2_spot--
+  while (newSeriesPick >= data.length) {
+    newSeriesPick--
   }
-  series1_spot = series2_spot;
-  series2_spot = getRandomArbitrary(0, aniListData.length);
-  series1 = originalData[1];
-  series2 = aniListData[series2_spot]
-  series.unshift(series1, series2)
-  setSeries(1)
-  setSeries(2)
-  fetchSeries()
+  originalSeriesPick = newSeriesPick;
+  let newSeriesNewPick = getRandomArbitrary(0, data.length);
+  series[0] = originalData[1];
+  series[1] = data[newSeriesNewPick]
+  series.unshift(series[0], series[1])
+  setSeries(1, series)
+  setSeries(2, series)
+  fetchSeries(originalSeriesPick, newSeriesNewPick, data)
 }
 
-function seriesTransistion(duration = "1.25", animationType) {
+function seriesTransistion(duration, animationType, data, originalData, newSeriesPick) {
   animateIn(seriesInfo[1], duration, animationType)
   animateIn(seriesInfo[0], duration, animationType)
-  replaceSeries()
+  replaceSeries(data, newSeriesPick, series, originalData)
 }
+
+// Function for easy animation control, 
+// animation's are from animate.css
 
 function animateIn(element, duration = "1.25", animationType = "fadeInRight") {
   element.style.setProperty('--animate-duration', `${duration}s`);
@@ -204,16 +179,16 @@ function animateIn(element, duration = "1.25", animationType = "fadeInRight") {
   });
 };
 
-function setSeries(series_id) {
+function setSeries(series_id, series) {
 
-  let series = getSeries(series_id);
-  let seriesTitle = document.getElementById(`seriesTitle${series_id}`);
-  let seriesImage = document.getElementById(`seriesImage${series_id}`);
+  const selectedSeries = getSeries(series_id, series);
+  const seriesTitle = document.getElementById(`seriesTitle${series_id}`);
+  const seriesImage = document.getElementById(`seriesImage${series_id}`);
   if (series_id == 1) {
-    let gmValue = document.getElementById(`gmValue${series_id}`);
-    gmValue.textContent = `${gamemode}: ${series.popularity}`;
+    const gmValue = document.getElementById(`gmValue${series_id}`);
+    gmValue.textContent = `${gamemode}: ${selectedSeries.popularity}`;
   }
 
-  seriesTitle.textContent = series?.title?.romaji || series?.title?.english || series?.title?.native || "Unknown";
-  seriesImage.src = series.coverImage.extraLarge;
+  seriesTitle.textContent = selectedSeries?.title?.romaji || selectedSeries?.title?.english || selectedSeries?.title?.native || "Unknown";
+  seriesImage.src = selectedSeries.coverImage.extraLarge;
 }
