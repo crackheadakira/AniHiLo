@@ -110,7 +110,6 @@ function removeDataDupes(data, series) {
 };
 
 function fetchSeries(ogSeriesPick, newSeriesPick, data) {
-  console.log(data)
   let ogSeries = data[ogSeriesPick];
   let newSeries = data[newSeriesPick];
   let series = [ogSeries, newSeries];
