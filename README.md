@@ -1,9 +1,9 @@
-# HigherOrLowerAni
+# AniHilo
 
 ```
    +---------------------------+
 ^  |                           |   ^
-|  |    Ani-Higher or Lower    |   |
+|  |          AniHilo          |   |
 |  |   +-------------------+   |   |
 |  |     Project made by       |   |
 |  |     @crackheadakira &     |   |
