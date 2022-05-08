@@ -27,15 +27,20 @@ a {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding-left: 2em;
+    padding-right: 2em;
 }
 
 #heroText {
-    font-size: 48px;
+    font-size: 3em;
     font-weight: 700;
+    text-align: center;
 }
 
 #scoreResult {
     font-size: 32px;
+    padding-top: 1em;
+    padding-bottom: 1em;
 }
 
 #buttons {
