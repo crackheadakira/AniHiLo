@@ -82,6 +82,7 @@ body {
 button:hover {
     filter: opacity(80%);
     transform: scale(1.05);
+    cursor: pointer;
 }
 
 button:active {
@@ -98,8 +99,8 @@ button {
     font-weight: 1000;
     color: white;
     transition: 250ms;
-    width: 128px;
-    height: 48px;
+    width: 172px;
+    height: 72px;
 }
 
 .seriesInfo {

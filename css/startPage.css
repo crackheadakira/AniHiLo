@@ -22,6 +22,7 @@ a {
 }
 
 a:hover {
+  cursor: pointer;
   transform: scale(1.05);
   filter: opacity(75%);
 }
@@ -57,6 +58,7 @@ a:active {
 }
 
 #startButton {
+  cursor: pointer;
   width: 200px;
   height: 78px;
   font-size: 28px;

@@ -57,6 +57,7 @@ a {
 button:hover {
     filter: opacity(80%);
     transform: scale(1.05);
+    cursor: pointer;
 }
 
 button:active {
