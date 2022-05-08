@@ -57,13 +57,13 @@ allBTNs.forEach(button => {
 // FUNCTIONS BELOW
 
 function correctAnswer(div) {
-  animateIn(div, "2.85", "tada");
+  animateIn(div, "2.85", "none");
   div.classList.add('correctAnswer');
   setTimeout(addScore, 1500, countUpOptions);
 };
 
 function wrongAnswer(div) {
-  animateIn(div, "2.85", "headShake");
+  animateIn(div, "2.85", "none");
   div.classList.add('wrongAnswer');
   setTimeout(gameOver, 2500, scoreValue);
 };
@@ -98,7 +98,7 @@ function fixDisplayNumber(div, allBTNs) {
   allBTNs[0].style.display = 'flex';
   allBTNs[1].style.display = 'flex';
   gamemodeBox.classList.remove('correctAnswer', 'wrongAnswer');
-  animateIn(series2BTNs, "1.25", "slideInUp");
+  animateIn(series2BTNs, "1.25", "fadeInUp");
 };
 
 // Find's the currently shown series and
