@@ -7,9 +7,9 @@ module.exports = defineConfig({
         rollupOptions: {
             input: {
                 main: resolve(__dirname, 'index.html'),
-                credits: resolve(__dirname, 'html/credits.html'),
-                gameover: resolve(__dirname, 'html/gameover.html'),
-                gameplay: resolve(__dirname, 'html/gameplay.html'),
+                credits: resolve(__dirname, 'credits.html'),
+                gameover: resolve(__dirname, 'gameover.html'),
+                gameplay: resolve(__dirname, 'gameplay.html'),
             }
         }
     }

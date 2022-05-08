@@ -1,6 +1,9 @@
 import axios from 'axios';
+import { query, vars } from './query&vars';
+let Query = query;
+let Vars = vars;
 
-function getGQL(query, vars, url = "https://graphql.anilist.co") {
+function getGQL(query = Query, vars = Vars, url = "https://graphql.anilist.co") {
   return new Promise((resolve, reject) => {
     axios.post(url, {
       query,
