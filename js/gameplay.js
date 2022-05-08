@@ -4,7 +4,6 @@ import getGQL from "./gQL";
 const countUpOptions = {
   separator: ' ',
 };
-const gamemode = "Popularity";
 const score = document.getElementById('scoreValue');
 const seriesInfo = document.querySelectorAll('.seriesInfo')
 const gamemodeBox = document.getElementById("gamemodeValue");
@@ -17,16 +16,18 @@ let originalSeriesPick = getRandomArbitrary(0, aniListData.length);
 let newSeriesPick = getRandomArbitrary(0, aniListData.length);
 let series = fetchSeries(originalSeriesPick, newSeriesPick, aniListData);
 let backupSeries = series;
+let gamemode = "Popularity";
 
-setSeries(1, series);
-setSeries(2, series);
+
+setSeries(1, series, gamemode);
+setSeries(2, series, gamemode);
 score.textContent = scoreValue;
 gamemodeBox.style.display = 'none';
 gamemodeBox.textContent = series[0].popularity;
 
 allBTNs.forEach(button => {
   button.addEventListener('click', (buttonInfo) => {
-    const animate = animateValue(series[1], countUpOptions);
+    const animate = animateValue(series[1], countUpOptions, gamemode);
     animate.start();
     switch (buttonInfo.target.id) {
       case "higher":
@@ -49,7 +50,7 @@ allBTNs.forEach(button => {
     // Replaces the buttons to display the newSeries popularity
     // and then does a transistion after 3 seconds to the new pick
     displayNumber(series[1].popularity, gamemodeBox, allBTNs);
-    setTimeout(seriesTransistion, 3000, "1.25", "fadeInRight", aniListData, backupSeries, newSeriesPick);
+    setTimeout(seriesTransistion, 3000, "1.25", "fadeInRight", aniListData, backupSeries, newSeriesPick, gamemode);
   });
 });
 
@@ -122,11 +123,11 @@ function gameOver(score) {
   if (score >= localStorage.getItem('highscore')) {
     localStorage.setItem('highscore', score)
   }
-  window.location.replace('../html/gameover.html')
+  window.location.replace('./gameover.html')
 };
 
-function animateValue(series, options) {
-  let animateValue = new CountUp('gamemodeValue', series.popularity, options);
+function animateValue(series, options, gamemode) {
+  let animateValue = new CountUp('gamemodeValue', series[gamemode.toLowerCase()], options);
   return animateValue;
 };
 
@@ -151,7 +152,7 @@ function getSeries(series_id, series) {
   return selectedSeries
 };
 
-function replaceSeries(data, newSeriesPick, series, originalData) {
+function replaceSeries(data, newSeriesPick, series, originalData, gamemode) {
   if (data.length <= 3) {
     updateData();
   };
@@ -163,15 +164,15 @@ function replaceSeries(data, newSeriesPick, series, originalData) {
   series[0] = originalData[1];
   series[1] = data[newSeriesNewPick];
   series.unshift(series[0], series[1]);
-  setSeries(1, series);
-  setSeries(2, series);
+  setSeries(1, series, gamemode);
+  setSeries(2, series, gamemode);
   fetchSeries(originalSeriesPick, newSeriesNewPick, data);
 }
 
-function seriesTransistion(duration, animationType, data, originalData, newSeriesPick) {
+function seriesTransistion(duration, animationType, data, originalData, newSeriesPick, gamemode) {
   animateIn(seriesInfo[1], duration, animationType);
   animateIn(seriesInfo[0], duration, animationType);
-  replaceSeries(data, newSeriesPick, series, originalData);
+  replaceSeries(data, newSeriesPick, series, originalData, gamemode);
 }
 
 // Function for easy animation control, 
@@ -185,14 +186,14 @@ function animateIn(element, duration = "1.25", animationType = "fadeInRight") {
   });
 };
 
-function setSeries(series_id, series) {
+function setSeries(series_id, series, gamemode) {
 
   const selectedSeries = getSeries(series_id, series);
   const seriesTitle = document.getElementById(`seriesTitle${series_id}`);
   const seriesImage = document.getElementById(`seriesImage${series_id}`);
   if (series_id == 1) {
     const gmValue = document.getElementById(`gmValue${series_id}`);
-    gmValue.textContent = `${gamemode}: ${selectedSeries.popularity}`;
+    gmValue.textContent = `${gamemode}: ${selectedSeries[gamemode.toLowerCase()]}`;
   }
 
   seriesTitle.textContent = selectedSeries?.title?.romaji || selectedSeries?.title?.english || selectedSeries?.title?.native || "Unknown";
