@@ -1,6 +1,6 @@
 let currentScore = localStorage.getItem('sessionScore');
 let score = document.getElementById('scoreResult')
-if(currentScore == null){
+if (currentScore == null) {
     currentScore = 0;
 }
-score.textContent = `Your score was ${currentScore}`
+score.textContent = `Your final score was ${currentScore}`
