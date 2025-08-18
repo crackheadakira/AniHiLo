@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/index.css">
+    <script type="module" src="./js/options.js" defer></script>
+    <title>AniHilo - Options</title>
+    <style>
+        body {
+            background-color: #0D1821;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div
+        class="container mx-auto pt-3 flex flex-col gap-4 justify-center items-center text-center min-h-screen text-xl p-3">
+        <fieldset class="flex flex-col p-2 w-fit text-left">
+            <div class="w-full">
+                <input type="radio" name="type" id="popularity">
+                <label for="score">Popularity</label>
+            </div>
+            <div class="w-full">
+                <input type="radio" name="type" id="score">
+                <label for="score">Average Score</label>
+            </div>
+        </fieldset>
+    </div>
+</body>
+
+</html>

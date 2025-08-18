@@ -97,10 +97,6 @@ button {
     height: 72px;
 }
 
-.seriesInfo {
-    height: 400px;
-}
-
 .gameSide {
     display: flex;
     flex-direction: column;
@@ -113,10 +109,10 @@ button {
     text-align: center;
     align-items: center;
     gap: 4px;
+    min-height: 400px;
 }
 
 .seriesTitle {
-    overflow: hidden;
     width: 310px;
     display: -webkit-box;
     -webkit-line-clamp: 2;

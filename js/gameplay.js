@@ -16,13 +16,13 @@ let originalSeriesPick = getRandomArbitrary(0, aniListData.length);
 let newSeriesPick = getRandomArbitrary(0, aniListData.length);
 let series = fetchSeries(originalSeriesPick, newSeriesPick, aniListData);
 let backupSeries = series;
-let gamemode = "Popularity";
+let gamemode = localStorage.getItem("gameplayType") ?? "popularity";
 
 setSeries(1, series, gamemode);
 setSeries(2, series, gamemode);
 score.textContent = scoreValue;
 gamemodeBox.style.display = "none";
-gamemodeBox.textContent = series[0].popularity;
+gamemodeBox.textContent = series[0][gamemode];
 
 allBTNs.forEach((button) => {
     button.addEventListener("click", (buttonInfo) => {
@@ -30,7 +30,7 @@ allBTNs.forEach((button) => {
         animate.start();
         switch (buttonInfo.target.id) {
             case "higher":
-                if (series[0].popularity <= series[1].popularity) {
+                if (series[0][gamemode] <= series[1][gamemode]) {
                     correctAnswer(gamemodeBox);
                 } else {
                     wrongAnswer(gamemodeBox);
@@ -38,7 +38,7 @@ allBTNs.forEach((button) => {
                 break;
 
             case "lower":
-                if (series[0].popularity >= series[1].popularity) {
+                if (series[0][gamemode] >= series[1][gamemode]) {
                     correctAnswer(gamemodeBox);
                 } else {
                     wrongAnswer(gamemodeBox);
@@ -47,7 +47,7 @@ allBTNs.forEach((button) => {
         }
         // Replaces the buttons to display the newSeries popularity
         // and then does a transistion after 3 seconds to the new pick
-        displayNumber(series[1].popularity, gamemodeBox, allBTNs);
+        displayNumber(series[1][gamemode], gamemodeBox, allBTNs);
         setTimeout(
             seriesTransistion,
             3000,
@@ -213,9 +213,9 @@ function setSeries(series_id, series, gamemode) {
     const seriesImage = document.getElementById(`seriesImage${series_id}`);
     if (series_id == 1) {
         const gmValue = document.getElementById(`gmValue${series_id}`);
-        gmValue.textContent = `${gamemode}: ${
-            selectedSeries[gamemode.toLowerCase()]
-        }`;
+        if (gamemode === "popularity")
+            gmValue.textContent = `Popularity: ${selectedSeries[gamemode]}`;
+        else gmValue.textContent = `Average Score: ${selectedSeries[gamemode]}`;
     }
 
     seriesTitle.textContent =
